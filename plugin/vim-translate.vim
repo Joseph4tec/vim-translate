@@ -24,5 +24,4 @@ function! VimTranslate()
 	endif
 endfunction
 
-nnoremap <F12> :call VimTranslate()<CR>
 

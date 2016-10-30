@@ -38,6 +38,7 @@ I don't want to compile Vim myself. So here comes this plugin.
 	````viml
 	nnoremap <F12> :call VimTranslate()<CR>
 	````
+
 ### How to use
 
 Move the cursor to a word you want to translate and press the key you mapped.
@@ -96,6 +97,7 @@ Vim翻译插件
 	````viml
 	nnoremap <F12> :call VimTranslate()<CR>
 	````
+
 ### 使用
 
 光标移到需要翻译的单词，按下绑定的按键。

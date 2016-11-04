@@ -1,51 +1,64 @@
+"文件域变量
+if !exists("s:source")
+	let s:source = "english"
+endif
+if !exists("s:target")
+	let s:target = "chinese"
+endif
+
+"通用翻译函数
 function! VimTranslate()
-	"待查词语
-	let s:word = expand("<cWORD>")
+	"获得待查词语
+	let word = expand("<cWORD>")
+	"调用翻译API
+	call JTranslateYoudao(word)
+endfunction
+
+function! JTranslateYoudao(word)
 	"生成查询语句
-	let s:query = "curl \"http://fanyi.youdao.com/openapi.do?keyfrom=" . g:keyfrom . "&key=" . g:key . "&type=data&doctype=json&version=1.1&q=" . s:word . '"'
+	let query = "curl \"http://fanyi.youdao.com/openapi.do?keyfrom=" . g:keyfrom . "&key=" . g:key . "&type=data&doctype=json&version=1.1&q=" . a:word . '"'
 	"获得curl查询结果
-	let s:get = system(s:query)
+	let get = system(query)
 	"调试用
-	"echo s:get
+	"echo get
 	"提取errorCode
-	let s:error = substitute(s:get,'.*"errorCode":\([0-9]*\).*','\1','')
+	let error = substitute(get,'.*"errorCode":\([0-9]*\).*','\1','')
 	"调试用
-	"echo 'errorCode:' . s:error
+	"echo 'errorCode:' . error
 	"对errorCode进行处理
-	if s:error == 0
+	if error == 0
 		"翻译成功的情况
-		echo s:word . "\n"
+		echo a:word . "\n"
 		"提取词典结果
-		let s:result = substitute(s:get,'.*explains":\[\(.*\)\]},"query.*','\1','')
-		if s:result != s:get
-			echo s:result
+		let result = substitute(get,'.*explains":\[\(.*\)\]},"query.*','\1','')
+		if result != get
+			echo result
 		else
 			"提取网络词典
-			let s:result = substitute(s:get,'.*web":\[{"value":\[','','')
-			let s:result = substitute(s:result,'\],"key.*','','')
-			if s:result != s:get
-				echo s:result
+			let result = substitute(get,'.*web":\[{"value":\[','','')
+			let result = substitute(result,'\],"key.*','','')
+			if result != get
+				echo result
 			else
 				"提取翻译结果
-				let s:result = substitute(s:get,'.*translation":\["','','')
-				let s:result = substitute(s:result,'"\],"query.*','','')
-				echo s:result
+				let result = substitute(get,'.*translation":\["','','')
+				let result = substitute(result,'"\],"query.*','','')
+				echo result
 			endif
 		endif
-	elseif s:error == 20
+	elseif error == 20
 		echo 'The source text in one request is too long'
-	elseif s:error == 30
+	elseif error == 30
 		echo 'The server is down'
-	elseif s:error == 40
+	elseif error == 40
 		echo 'Not support language code'
-	elseif s:error == 50
+	elseif error == 50
 		echo 'Invalid key'
-	elseif s:error == 60
+	elseif error == 60
 		echo 'No dictionary result'
 	else
 		echo 'unknow error!'
 	endif
 	"对字符串进行处理
 endfunction
-
 

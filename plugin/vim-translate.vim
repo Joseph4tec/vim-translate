@@ -43,7 +43,11 @@ function! JTranslateYoudao(word)
 				"提取翻译结果
 				let result = substitute(get,'.*translation":\["','','')
 				let result = substitute(result,'"\],"query.*','','')
-				echo result
+				if result != get
+					echo result
+				else
+					echo 'Maybe it''s not a correct word or sentence!'
+				endif
 			endif
 		endif
 	elseif error == 20
@@ -57,7 +61,7 @@ function! JTranslateYoudao(word)
 	elseif error == 60
 		echo 'No dictionary result'
 	else
-		echo 'unknow error!'
+		echo 'Unknow errorCode received from Youdao translate API!'
 	endif
 	"对字符串进行处理
 endfunction
